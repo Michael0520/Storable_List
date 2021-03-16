@@ -27,21 +27,57 @@ function createList() {
     .sort((a, b) => a.sort - b.sort)
     .map((a) => a.value)
     .forEach((company, index) => {
-      console.log(company);
       const listItem = document.createElement("li");
 
       listItem.setAttribute("data-index", index);
 
       listItem.innerHTML = `
-    <span class ="number">${index + 1}</span>
-    <div class ="draggable" draggable="true">
+      <span class="number">${index + 1}</span>
+      <div class="draggable" draggable="true">
         <p class="company-name">${company}</p>
         <i class="fas fa-grip-lines"></i>
-    </div>
+      </div>
     `;
 
       listItems.push(listItem);
 
       draggable_list.appendChild(listItem);
     });
+  addEventListeners();
+}
+
+function dragStart() {
+  //   console.log("Event:", "dragstart");
+  dragStarIndex = +this.closest("li").getAttribute("data-index");
+}
+function dragEnter() {
+  //   console.log("Event:", "dragenter");
+  this.classList.add("over");
+}
+function dragLeave() {
+  //   console.log("Event:", "dragleave");
+  this.classList.remove("over");
+}
+function dragOver() {
+  //   console.log("Event:", "dragover");
+}
+function dragDrop() {
+  //   console.log("Event:", "drop");
+  const dragEndIndex = this.getAttribute("data-index");
+}
+
+function addEventListeners() {
+  const draggables = document.querySelectorAll(".draggable");
+  const dragListItems = document.querySelectorAll(".draggable-list li");
+
+  draggables.forEach((draggable) => {
+    draggable.addEventListener("dragstart", dragStart);
+  });
+
+  dragListItems.forEach((item) => {
+    item.addEventListener("dragover", dragOver);
+    item.addEventListener("drop", dragDrop);
+    item.addEventListener("dragenter", dragEnter);
+    item.addEventListener("dragleave", dragLeave);
+  });
 }
