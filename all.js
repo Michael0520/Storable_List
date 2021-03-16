@@ -2,21 +2,21 @@ const draggable_list = document.getElementById("draggable-list");
 const check = document.getElementById("check");
 
 const powerfulBrands = [
-  "珍煮丹黑糖飲品專賣",
-  "陳三鼎黑糖青蛙鮮奶創始店",
+  "coffee_tea_or",
+  "翰林茶館",
   "春水堂人文茶館 Chun Shui Tang",
-  "樺達奶茶 Huada Milk Tea",
-  "十杯手作茶飲",
-  "郭姐茶坊",
-  "廖媽媽珍珠奶茶",
-  "Queenny葵米 珍珠飲品專售",
-  "雙妃奶茶",
-  "迷客夏綠光牧場主題飲品",
+  "春陽茶事",
+  "龜記茗品",
+  "麻古茶坊",
+  "清心福全",
+  "樺達奶茶",
+  "茶湯會",
+  "萬波島嶼",
 ];
 // Store listItems
 const listItems = [];
 
-let dragStarIndex;
+let dragStartIndex;
 
 createList();
 
@@ -48,7 +48,8 @@ function createList() {
 
 function dragStart() {
   //   console.log("Event:", "dragstart");
-  dragStarIndex = +this.closest("li").getAttribute("data-index");
+  dragStartIndex = +this.closest("li").getAttribute("data-index");
+  console.log(dragStartIndex);
 }
 function dragEnter() {
   //   console.log("Event:", "dragenter");
@@ -58,12 +59,40 @@ function dragLeave() {
   //   console.log("Event:", "dragleave");
   this.classList.remove("over");
 }
-function dragOver() {
+function dragOver(e) {
   //   console.log("Event:", "dragover");
+  e.preventDefault();
 }
 function dragDrop() {
   //   console.log("Event:", "drop");
-  const dragEndIndex = this.getAttribute("data-index");
+  const dragEndIndex = +this.getAttribute("data-index");
+  swapItems(dragStartIndex, dragEndIndex);
+
+  this.classList.remove("over");
+}
+
+// Swap list items that are drag and drop
+function swapItems(fromIndex, toIndex) {
+  const itemOne = listItems[fromIndex].querySelector(".draggable");
+  const itemTwo = listItems[toIndex].querySelector(".draggable");
+
+  // console.log(itemOne, itemTwo);
+  listItems[fromIndex].appendChild(itemTwo);
+  listItems[toIndex].appendChild(itemOne);
+}
+
+// Check the order of list items
+function checkOrder() {
+  listItems.forEach((listItem, index) => {
+    const randomBrands = listItem.querySelector(".draggable").innerText.trim();
+
+    if (randomBrands !== powerfulBrands[index]) {
+      listItem.classList.add("wrong");
+    } else {
+      listItem.classList.remove("wrong");
+      listItem.classList.add("right");
+    }
+  });
 }
 
 function addEventListeners() {
@@ -81,3 +110,5 @@ function addEventListeners() {
     item.addEventListener("dragleave", dragLeave);
   });
 }
+
+check.addEventListener("click", checkOrder);
